@@ -4,7 +4,11 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
@@ -14,6 +18,7 @@ public class PanelPrincipal extends JPanel implements ActionListener {
     private PanelBotones botonera;
     private JTextArea areaTexto;
     private int tipoOperacion;
+    private String operacionIntroducida = "";
 
     // Constructor
     public PanelPrincipal() {
@@ -45,11 +50,46 @@ public class PanelPrincipal extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent ae) {
         // Se obtiene el objeto que desencadena el evento
         Object o = ae.getSource();
-        // Si es un botón
-        if (o instanceof JButton) {
-            System.out.println(((JButton) o).getText());
-            areaTexto.setText(((JButton) o).getText());
+        
+        List<String> listaOperacionesDisponibles = new ArrayList<>();
+        listaOperacionesDisponibles.add("+");
+        listaOperacionesDisponibles.add("-");
+        listaOperacionesDisponibles.add("*");
+        listaOperacionesDisponibles.add("/");
+        listaOperacionesDisponibles.add("C");
+        listaOperacionesDisponibles.add("=");
+        
+        String textoButon = ((JButton) o).getText();
+        if (textoButon.equals("C")) {
+            operacionIntroducida = "";
+        } else if (textoButon.equals("=")){
+            areaTexto.setText(calcularResultadoOperacion(operacionIntroducida));
+        } else if (listaOperacionesDisponibles.contains(textoButon)){
+            operacionIntroducida += " " + textoButon + " ";
+        } else {
+            operacionIntroducida += textoButon;
         }
-
+        
+        if (!textoButon.contains("=")){
+            areaTexto.setText(operacionIntroducida);
+        }
+    }
+    
+    public String calcularResultadoOperacion(String operacionIntroducida){
+        String[] operacionUsuario = operacionIntroducida.split(" ");
+        double resultado = 0.0;
+        double numero1 = Double.parseDouble(operacionUsuario[0]);
+        double numero2 = Double.parseDouble(operacionUsuario[2]);
+        if (operacionIntroducida.contains("*")) {
+            resultado = numero1 * numero2;
+        } else if (operacionIntroducida.contains("+")) {
+            resultado = numero1 + numero2;
+        } else if (operacionIntroducida.contains("/")) {
+            resultado = numero1 / numero2;
+        } else if (operacionIntroducida.contains("-")) {
+            resultado = numero1 - numero2;
+        }
+        System.out.println(resultado);
+        return resultado + "";
     }
 }
