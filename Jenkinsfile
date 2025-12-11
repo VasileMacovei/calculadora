@@ -5,12 +5,6 @@ pipeline {
         maven 'Maven 3.9.11'
     }
     stages {
-        stage('Check Java') {
-            steps {
-                sh 'echo $JAVA_HOME'
-                sh 'java -version'
-            }
-        }
         stage('Build') {
             steps {
                 sh 'mvn -B clean package'
