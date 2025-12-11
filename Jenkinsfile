@@ -7,7 +7,7 @@ pipeline {
     stages {
         stage('Test') {
             steps {
-                sh 'mvn test'
+                sh 'mvn test -Djava.awt.headless=true'
             }
             post {
                 always {
