@@ -1,11 +1,9 @@
 pipeline {
     agent any
-
     tools {
-        jdk 'JDK22'
+        jdk 'JDK21'
         maven 'Maven 3.9.11'
     }
-
     stages {
         stage('Check Java') {
             steps {
@@ -13,17 +11,12 @@ pipeline {
                 sh 'java -version'
             }
         }
-
         stage('Build') {
             steps {
-                withEnv(["JAVA_HOME=${tool 'JDK22'}", "PATH=${tool 'JDK22'}/bin:${env.PATH}"]) {
-                    sh 'java -version'
-                    sh 'mvn -B clean package'
-                }
+                sh 'mvn -B clean package'
             }
         }
     }
-
     post {
         success {
             archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
@@ -33,4 +26,3 @@ pipeline {
         }
     }
 }
-
