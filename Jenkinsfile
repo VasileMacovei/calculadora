@@ -7,20 +7,6 @@ pipeline {
 
     stages {
 
-        stage('Prepare') {
-            steps {
-                deleteDir()
-            }
-        }
-
-        stage('Checkout') {
-            steps {
-                git branch: 'main',
-                    url: 'https://github.com/VasileMacovei/calculadora.git',
-                    credentialsId: 'github_token'
-            }
-        }
-
         stage('Test') {
             steps {
                 sh 'mvn test -Djava.awt.headless=true'
@@ -37,7 +23,7 @@ pipeline {
                 sh 'mvn clean package -DskipTests'
             }
         }
-
+        
         stage('Docker Build') {
             when {
                 branch 'main'
@@ -57,7 +43,7 @@ pipeline {
                 sh '''
                     docker stop miapp || true
                     docker rm miapp || true
-                    docker run -d --name miapp -p 8081:8080 miapp:latest
+                    docker run -d --name miapp -p 8080:8080 miapp:latest
                 '''
             }
         }
