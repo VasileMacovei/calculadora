@@ -4,7 +4,9 @@ pipeline {
         jdk 'JDK21'
         maven 'Maven 3.9.11'
     }
+
     stages {
+
         stage('Test') {
             steps {
                 sh 'mvn test -Djava.awt.headless=true'
@@ -15,12 +17,38 @@ pipeline {
                 }
             }
         }
+
         stage('Build') {
             steps {
                 sh 'mvn clean package -DskipTests'
             }
         }
+        
+        stage('Docker Build') {
+            when {
+                branch 'main'
+            }
+            steps {
+                echo "🐳 Construyendo imagen Docker..."
+                sh 'docker build -t miapp:latest .'
+            }
+        }
+
+        stage('Docker Deploy') {
+            when {
+                branch 'main'
+            }
+            steps {
+                echo "Desplegando contenedor Docker..."
+                sh '''
+                    docker stop miapp || true
+                    docker rm miapp || true
+                    docker run -d --name miapp -p 8080:8080 miapp:latest
+                '''
+            }
+        }
     }
+
     post {
         success {
             archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
