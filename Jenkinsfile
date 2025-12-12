@@ -25,25 +25,17 @@ pipeline {
         }
         
         stage('Docker Build') {
-            when {
-                branch 'main'
-            }
             steps {
-                echo "Construyendo imagen Docker..."
                 sh 'docker build -t miapp:latest .'
             }
         }
 
         stage('Docker Deploy') {
-            when {
-                branch 'main'
-            }
             steps {
-                echo "Desplegando contenedor Docker..."
                 sh '''
                     docker stop miapp || true
                     docker rm miapp || true
-                    docker run -d --name miapp -p 8080:8080 miapp:latest
+                    docker run -d --name miapp -p 8081:8080 miapp:latest
                 '''
             }
         }
