@@ -7,6 +7,20 @@ pipeline {
 
     stages {
 
+        stage('Prepare') {
+            steps {
+                deleteDir()
+            }
+        }
+
+        stage('Checkout') {
+            steps {
+                git branch: 'main',
+                    url: 'https://github.com/VasileMacovei/calculadora.git',
+                    credentialsId: 'github_token'
+            }
+        }
+
         stage('Test') {
             steps {
                 sh 'mvn test -Djava.awt.headless=true'
@@ -23,7 +37,7 @@ pipeline {
                 sh 'mvn clean package -DskipTests'
             }
         }
-        
+
         stage('Docker Build') {
             when {
                 branch 'main'
