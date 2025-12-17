@@ -10,7 +10,7 @@ public class PanelBotonesTest {
     public void testCreacionBotones() {
         PanelBotones panel = new PanelBotones();
         assertNotNull(panel.getgrupoBotones(), "El array de botones no debe ser nulo");
-        assertEquals(16, panel.getgrupoBotones().length, "Debe haber 16 botones");
+        assertEquals(null, panel.getgrupoBotones().length, "Debe haber 16 botones");
     }
     
     @Test
